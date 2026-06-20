@@ -41,16 +41,21 @@ th {
 
 <table>
 <tr>
-    <th>ID</th>
+    <th>id</th>	
     <th>Timestamp</th>
     <th>IP</th>
     <th>Browser</th>
-    <th>OS<th>
+    <th>OS</th>
     <th>Device</th>
     <th>Username</th>
+    <th>phone</th>
+    <th>email</th>
     <th>WiFi ID</th>
+    <th>Location status</th>
     <th>Lat</th>
     <th>Lon</th>
+    <th>User Agent</th>
+    <th>Connection Status</th>
 </tr>
 
 {% for log in logs %}
@@ -65,6 +70,11 @@ th {
     <td>{{ log[7] }}</td>
     <td>{{ log[8] }}</td>
     <td>{{ log[9] }}</td>
+    <td>{{ log[10] }}</td>
+    <td>{{ log[11] }}</td>
+    <td>{{ log[12] }}</td>
+    <td>{{ log[13] }}</td>
+    <td>{{ log[14] }}</td>
 </tr>
 {% endfor %}
 

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyBridge Airport</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    color:#222;
+}
+
+.hero{
+    min-height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,.55),
+    rgba(0,0,0,.55)),
+    url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=80");
+
+    background-size:cover;
+    background-position:center;
+}
+
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 8%;
+}
+
+.logo{
+    color:white;
+    font-size:30px;
+    font-weight:700;
+}
+
+.logo span{
+    color:#4cc9f0;
+}
+
+.nav-links{
+    display:flex;
+    gap:30px;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:500;
+}
+
+.hero-content{
+    text-align:center;
+    color:white;
+    padding-top:120px;
+}
+
+.hero-content h1{
+    font-size:60px;
+    margin-bottom:20px;
+}
+
+.hero-content p{
+    font-size:20px;
+    max-width:700px;
+    margin:auto;
+}
+
+.access-section{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    margin-top:60px;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:350px;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:30px;
+    color:white;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+
+.card h2{
+    margin-bottom:15px;
+}
+
+.card p{
+    margin-bottom:25px;
+}
+
+.btn{
+    display:inline-block;
+    text-decoration:none;
+    padding:14px 28px;
+    border-radius:10px;
+    color:white;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-primary{
+    background:#0d6efd;
+}
+
+.btn-success{
+    background:#198754;
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+}
+
+.features{
+    padding:80px 10%;
+    text-align:center;
+}
+
+.features h2{
+    margin-bottom:40px;
+    font-size:40px;
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.feature-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.feature-box h3{
+    margin-bottom:10px;
+}
+
+.map-section{
+    padding:80px 10%;
+    background:#eef3f8;
+}
+
+.map-section h2{
+    text-align:center;
+    margin-bottom:40px;
+    font-size:40px;
+}
+
+.airport-map{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.zone{
+    background:white;
+    border-radius:15px;
+    padding:40px;
+    text-align:center;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.zone:hover{
+    background:#0d6efd;
+    color:white;
+}
+
+.info-panel{
+    margin-top:30px;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.info-panel h3{
+    margin-bottom:10px;
+}
+
+footer{
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+@media(max-width:768px){
+
+.hero-content h1{
+    font-size:40px;
+}
+
+.airport-map{
+    grid-template-columns:1fr;
+}
+
+nav{
+    flex-direction:column;
+    gap:15px;
+}
+}
+.map-section{
+    padding:60px 10%;
+    background:#f4f7fb;
+    text-align:center;
+}
+
+.map-section h2{
+    margin-bottom:25px;
+    font-size:32px;
+}
+
+.map-container{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+.map-container img{
+    width:100%;
+    max-width:1000px;
+    border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+
+<nav>
+
+<div class="logo">
+SkyBridge <span>Airport</span>
+</div>
+
+<div class="nav-links">
+<a href="#">Home</a>
+<a href="#services">Services</a>
+<a href="#disclaimer">Disclaimer</a>
+<a href="#">Support</a>
+</div>
+
+</nav>
+
+<div class="hero-content">
+
+<h1>Welcome to SkyBridge Airport</h1>
+
+<p style="color:#ffd166; font-weight:600; margin-bottom:15px;">
+Educational Cybersecurity Project – Do not enter real credentials or sensitive information.
+</p>
+
+<p>
+Fast. Secure. Connected.
+Enjoy seamless airport WiFi access and airport services.
+</p>
+
+<div class="access-section">
+
+<div class="card">
+
+<h2>Guest WiFi Access</h2>
+
+<p>
+Connect to the airport network using our secure guest portal.
+</p>
+
+<a href="/guest" class="btn btn-primary">
+Connect to Free WiFi
+</a>
+
+</div>
+
+<div class="card">
+
+<h2>Employee Portal</h2>
+
+<p>
+Airport staff can securely access employee resources.
+</p>
+
+<a href="/employee-login" class="btn btn-success">
+Employee Login
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="features" id="services">
+
+<h2>Airport Services</h2>
+
+<div class="feature-grid">
+
+<div class="feature-box">
+<h3>Secure WiFi</h3>
+<p>Safe guest internet access.</p>
+</div>
+
+<div class="feature-box">
+<h3>Airport Navigation</h3>
+<p>Interactive airport guidance.</p>
+</div>
+
+<div class="feature-box">
+<h3>Security Monitoring</h3>
+<p>Real-time activity logging.</p>
+</div>
+
+<div class="feature-box">
+<h3>Guest Experience</h3>
+<p>Fast onboarding process.</p>
+</div>
+
+</div>
+
+</section>
+<section class="map-section" id="disclaimer">
+
+<h2>Educational Project Disclaimer</h2>
+
+<div class="map-container" style="text-align:left;">
+
+<p>
+This website is a cybersecurity education and training project created
+solely for learning, demonstration, and research purposes.
+</p>
+
+<p>
+For educational and security monitoring purposes, this system may collect
+and store:
+</p>
+
+<ul style="margin-left:20px; line-height:1.8;">
+    <li>IP Address</li>
+    <li>Date and Time of Access</li>
+    <li>Browser and Device Information</li>
+    <li>Connection Status</li>
+    <li>Location Permission Status</li>
+    <li>Approximate Location Information (if permission is granted)</li>
+    <li>Email Address and Phone Number (if provided)</li>
+    <li>Submitted Form Data</li>
+    <li>Security and Audit Logs</li>
+</ul>
+<br>
+
+<p>
+Users must not enter real passwords, financial information, government
+identifiers, or other sensitive personal information.
+</p>
+
+<p>
+By using this website, you acknowledge that:
+</p>
+
+<ul style="margin-left:20px; line-height:1.8;">
+    <li>This is an educational project and not a production service.</li>
+    <li>You are responsible for any information you choose to submit.</li>
+    <li>You will not submit confidential or real credentials.</li>
+    <li>The project owner is not responsible for the submission of real credentials or sensitive information contrary to these instructions.</li>
+    <li>Any misuse of this website remains the responsibility of the individual performing such actions.</li>
+</ul>
+
+</div>
+
+</section>
+
+<footer>
+© 2026 SkyBridge Airport
+</footer>
+
+
+</body>
+</html>

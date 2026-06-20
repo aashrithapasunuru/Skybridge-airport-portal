@@ -17,10 +17,14 @@ def init_db():
     os TEXT,
     device_type TEXT,
     username TEXT,
+    phone TEXT,
+    email TEXT,
     wifi_id TEXT,
+    location_status TEXT,
     latitude TEXT,
     longitude TEXT,
-    user_agent TXT
+    user_agent_string TEXT,
+    connection_status TEXT
     )
     """)
 
