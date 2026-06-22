@@ -19,27 +19,18 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:
-	    linear-gradient(
-	    rgba(0,40,80,0.7),
-	    rgba(0,20,50,0.8)
-	    ),
-           url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05")
-	   center center/cover no-repeat;
-
+    background:linear-gradient(135deg,#0077ff,#00bfff);
     padding:20px;
 }
 
 .card{
-    background:rgba(255,255,255,0.95);
+    background:white;
     width:100%;
-    max-width:500px;
+    max-width:450px;
     border-radius:20px;
-    padding:35px;
+    padding:30px;
     text-align:center;
-    box-shadow:0 15px 40px rgba(0,0,0,0.3);
-
-    backdrop-filter: blur(10px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
 }
 
 .logo{
@@ -90,18 +81,12 @@ h1{
 
 .connect-btn{
     width:100%;
-    background:linear-gradient(
-	    90deg,
-	    #0077ff,
-	    #00bfff
-      );
-
+    background:#0077ff;
     color:white;
     border:none;
-    padding:16px;
+    padding:15px;
     border-radius:10px;
-    font-size:17px;
-    font-weight:bold;
+    font-size:16px;
     cursor:pointer;
     transition:0.3s;
 }
@@ -167,14 +152,6 @@ h1{
 .retry-btn:hover{
     background:#e68900;
 }
-input{
-	width:100%;
-	padding:14px;
-	border:1px solid #ddd;
-	border-radius:10px;
-	font-size:16px;
-	margin-top:5px;
-}
 </style>
 </head>
 
@@ -184,19 +161,13 @@ input{
 
     <div class="logo">✈️</div>
 
-    <h1>SkyBridge International Airport</h1>
+    <h1>SkyBridge Airport WiFi</h1>
 
-    <p style="color:#0077ff;font-weight:bold;">
-       Free Passenger Wifi Portal
-    </p>
+    <p class="location">Terminal 2 • Hyderabad</p>
 
-   <div class="wifi-badge">
-   📶 Airport_Free_WiFi
-   </div>
-
-   <p style="margin-top:10px;color:#28a745;">
-   ● Signal Strength: Excellent
-   </p>
+    <div class="wifi-badge">
+        Airport_Free_WiFi
+    </div>
 
     <div class="services">
         <h3>Airport Services</h3>
@@ -223,31 +194,10 @@ input{
         </div>
     </div>
 
-    <br>
-
-    <div class="form-section">
-
-	    <label for="fullname">Full name</label>
-    <input type="text" id="fullname" name="fullname" placeholder="Enter your name" required>
     <br><br>
-
-    <label> Email Address</label>
-    <input type="email"
-           name="email"
-           placeholder="example@email.com"
-           required>
-
-<br><br>
-    <label for="phone">Phone Number</label>
-    <input type="tel"
-           name="phone"
-           pattern="[0-9]{10}"
-	   title="Enter a 10-digit phone number"
-           required>
-
+  
+    <input type="text" id="fullname" name="fullname" placeholder="Enter your name (optional)">
     <br><br>
-
-    </div>
 
     <button type="button" class="connect-btn" onclick="connectWifi()">
 	    Connect to Free Wifi
@@ -258,9 +208,7 @@ input{
     </div>
 
     <div class="notice">
-	    🔒 Secure Airport Network.<br>   
-
-            By connecting, you agree that your session activity may be logged for security and operational purposes.
+        By connecting you agree to the Airport WiFi Terms and Conditions.
     </div>
 
     <div class="footer">
@@ -276,23 +224,6 @@ function connectWifi(){
     const status = document.getElementById("status");
 
     const username = document.getElementById("fullname").value || "Guest";
-    const email = document.querySelector('input[name="email"]').value.trim();
-    const phone = document.querySelector('input[name="phone"]').value.trim();
-
-	//Email Validation
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if(!emailPattern.test(email)){
-	    status.innerText = "Please enter a valid email address.";
-	    return;
-    }
-	//Phone validation
-    const phonePattern = /^[0-9]{10}$/;
-
-    if(!phonePattern.test(phone)){
-	    status.innerText = "Phone number must be exactly 10 digits.";
-	    return;
-    }
 
     status.innerText = "Requesting location...";	
 
@@ -310,25 +241,11 @@ function connectWifi(){
 			    headers: {
 				    "Content-Type": "application/x-www-form-urlencoded"
 			    },
-			    body:
-			    `fullname=${encodeURIComponent(username)}
-			    &email=${encodeURIComponent(email)}
-			    &phone=${encodeURIComponent(phone)}
-			    &lat=${lat}
-			    &lon=${lon}`
+			    body: `fullname=${encodeURIComponent(username)}&lat=${lat}&lon=${lon}`
 		    })
-			    .then(response => {
-                                if(response.ok){
-                                      window.location.href = "/success";
-                                } else {
-                                    status.innerText = "Server error.";
-                                }
-                            })
-                            .catch(error => {
-                                 console.error(error);
-                                 status.innerText = "Connection failed.";
-                           });
-
+			    .then(() => {
+				    window.location.href = "/success";
+			    });
 	    }, 
 		function(error) {
 		    status.innerText = "Location denied. Cannot connect.";

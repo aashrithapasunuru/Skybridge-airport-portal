@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Employee Dashboard</title>
+
+<style>
+
+body{
+    font-family:Arial, sans-serif;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.header{
+    background:#1e293b;
+    padding:20px;
+    border-bottom:1px solid #334155;
+}
+
+.header h1{
+    margin:0;
+}
+
+.container{
+    padding:30px;
+}
+
+.welcome-card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:25px;
+}
+
+.card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#1e293b;
+    padding:25px;
+    border-radius:12px;
+    text-align:center;
+    border:1px solid #334155;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    border-color:#38bdf8;
+}
+
+.card h3{
+    margin-bottom:15px;
+}
+
+.btn{
+    display:inline-block;
+    padding:10px 20px;
+    background:#0ea5e9;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.btn:hover{
+    background:#0284c7;
+}
+
+.status{
+    margin-top:30px;
+    background:#1e293b;
+    padding:15px;
+    border-radius:12px;
+    color:#22c55e;
+    text-align:center;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-top:15px;
+}
+
+.info-box{
+    background:#0f172a;
+    border:1px solid #334155;
+    border-radius:10px;
+    padding:15px;
+}
+
+.info-box h4{
+    color:#94a3b8;
+    margin-bottom:8px;
+}
+
+.info-box p{
+    font-size:18px;
+    font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>✈️ SkyBridge Airport</h2>
+    <h1>Employee Security Portal</h1>
+</div>
+
+<div class="container">
+
+    <div class="welcome-card">
+        
+
+       <h2>👤 Account Information</h2>
+
+       <div class="info-grid">
+
+
+     <div class="info-box">
+        <h4>Employee ID</h4>
+        <p>{{ employee["employee_id"] }}</p>
+    </div>
+
+    <div class="info-box">
+	    <h4>Full Name:</h4>
+	    <p>{{ employee["full_name"] }}</p>
+    </div>	    
+
+    <div class="info-box">
+        <h4>Department</h4>
+        <p>{{ employee["department"] }}</p>
+    </div>
+
+    <div class="info-box">
+        <h4>Role</h4>
+        <p>{{ employee["role"] }}</p>
+    </div>
+
+    <div class="info-box">
+        <h4>MFA Status</h4>
+        <p>{{ employee["mfa_enabled"] }}</p>
+    </div>
+
+    <div class="info=box">
+	    <h4>Last Login:</h4>
+	    <p>{{ employee["last_login"] }}</p>
+    </div>	    
+
+</div>
+
+</div>
+    </div>
+
+    <div class="card-grid">
+
+        <div class="card">
+            <h3>🔑 Change Password</h3>
+            <a href="/change_password" class="btn">
+                Open
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>🛡 MFA Settings</h3>
+            <a href="#" class="btn">
+                Coming Soon
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>👤 My Profile</h3>
+            <a href="#" class="btn">
+                View
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>🚪 Logout</h3>
+            <a href="/logout" class="btn">
+                Logout
+            </a>
+        </div>
+
+    </div>
+
+    <div class="status">
+        ● Security Systems Operational
+    </div>
+
+</div>
+
+</body>
+</html>

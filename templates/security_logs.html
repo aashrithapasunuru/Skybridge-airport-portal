@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SOC Logs Dashboard</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#0b1220;
+    color:white;
+    margin:0;
+}
+
+.header{
+    background:#111827;
+    padding:15px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.container{
+    padding:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#111827;
+}
+
+th{
+    background:#0f172a;
+    color:#93c5fd;
+}
+
+th,td{
+    padding:10px;
+    border-bottom:1px solid #1f2937;
+    text-align:left;
+}
+
+tr:hover{
+    background:#1e293b;
+}
+
+.low{
+    color:#22c55e;
+    font-weight:bold;
+}
+
+.medium{
+    color:#f59e0b;
+    font-weight:bold;
+}
+
+.high{
+    color:#ef4444;
+    font-weight:bold;
+}
+
+.search{
+    margin-bottom:15px;
+}
+
+.search input{
+    width:100%;
+    padding:10px;
+    background:#0f172a;
+    border:1px solid #334155;
+    color:white;
+}
+ .navbar {
+    background: #111827;
+    padding: 12px 20px;
+    border-bottom: 1px solid #1f2937;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #60a5fa;
+}
+.active {
+	color: #60a5fa !important;
+}
+
+</style>
+
+<script>
+function searchLogs() {
+    let input = document.getElementById("searchInput");
+    let filter = input.value.toLowerCase();
+
+    let rows = document.getElementById("logTable")
+                       .getElementsByTagName("tr");
+
+    for(let i=1;i<rows.length;i++){
+        let text = rows[i].innerText.toLowerCase();
+
+        rows[i].style.display =
+            text.includes(filter) ? "" : "none";
+    }
+}
+</script>
+
+</head>
+
+<body>
+<div class="navbar">
+    <a href="/admin/logs">📶 Guest Logs</a>
+    <a href="/admin/employees" class="active">👥 Employees</a>
+    <a href="/admin/security_logs">🚨 Security Logs</a>
+</div>	
+
+<div class="header">
+🛡 SOC Security Logs Dashboard
+</div>
+
+<div class="container">
+
+<div class="search">
+<input
+type="text"
+id="searchInput"
+placeholder="Search logs..."
+onkeyup="searchLogs()">
+</div>
+
+<table id="logTable">
+
+<tr>
+<th>Timestamp</th>
+<th>Employee ID</th>
+<th>Username</th>
+<th>Event Type</th>
+<th>IP Address</th>
+<th>Location</th>
+<th>Connection</th>
+<th>Severity</th>
+<th>Notes</th>
+</tr>
+
+{% for log in logs %}
+<tr>
+
+<td>{{ log[1] }}</td>
+<td>{{ log[2] }}</td>
+<td>{{ log[3] }}</td>
+<td>{{ log[4] }}</td>
+<td>{{ log[5] }}</td>
+<td>{{ log[6] }}</td>
+<td>{{ log[7] }}</td>
+
+<td>
+{% if log[8] == 'Low' %}
+<span class="low">LOW</span>
+
+{% elif log[8] == 'Medium' %}
+<span class="medium">MEDIUM</span>
+
+{% else %}
+<span class="high">HIGH</span>
+{% endif %}
+</td>
+
+<td>{{ log[9] }}</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SOC Admin Dashboard - Panel 2</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #0b1220;
+    color: #e2e8f0;
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    padding: 15px 20px;
+    background: #111827;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #1f2937;
+}
+
+/* CONTAINER */
+.container {
+    padding: 20px;
+}
+
+/* SUMMARY CARDS */
+.cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card {
+    flex: 1;
+    background: #111827;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #1f2937;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.card p {
+    font-size: 22px;
+    margin: 8px 0 0;
+}
+
+/* SEARCH BAR */
+.search-box {
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px;
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    color: white;
+    border-radius: 6px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #111827;
+    font-size: 12px;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #1f2937;
+    text-align: left;
+    white-space: nowrap;
+}
+
+th {
+    background: #0f172a;
+    color: #93c5fd;
+    position: sticky;
+    top: 0;
+}
+
+tr:hover {
+    background: #1e293b;
+}
+
+/* BADGES */
+.badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.active { background: #14532d; color: #22c55e; }
+.locked { background: #450a0a; color: #ef4444; }
+.mfa { background: #1e3a8a; color: #60a5fa; }
+.no-mfa { background: #3f3f46; color: #d4d4d8; }
+
+/* RISK SCORE */
+.risk-low { color: #22c55e; font-weight: bold; }
+.risk-medium { color: #f59e0b; font-weight: bold; }
+.risk-high { color: #ef4444; font-weight: bold; }
+
+/* BUTTONS */
+.btn {
+    padding: 4px 7px;
+    border: none;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.view { background: #2563eb; color: white; }
+.lock { background: #dc2626; color: white; }
+.unlock { background: #16a34a; color: white; }
+.flag { background: #f59e0b; color: black; }
+
+.btn:hover {
+    opacity: 0.8;
+}
+.navbar {
+    background: #111827;
+    padding: 12px 20px;
+    border-bottom: 1px solid #1f2937;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #60a5fa;
+}
+.active {
+	color: #60a5fa !important;
+}
+</style>
+
+<script>
+function searchTable() {
+    let input = document.getElementById("searchInput");
+    let filter = input.value.toLowerCase();
+    let rows = document.getElementById("empTable").getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+        let rowText = rows[i].innerText.toLowerCase();
+        rows[i].style.display = rowText.includes(filter) ? "" : "none";
+    }
+}
+</script>
+
+</head>
+
+<body>
+<div class="navbar">
+    <a href="/admin/logs">📶 Guest Logs</a>
+    <a href="/admin/employees" class="active">👥 Employees</a>
+    <a href="/admin/security_logs">🚨 Security Logs</a>
+</div>
+
+<div class="header">
+🛡 SOC Admin Dashboard - Panel 2
+</div>
+
+<div class="container">
+
+<!-- SUMMARY CARDS -->
+<div class="cards">
+    <div class="card">
+        <h3>👥 Total Employees</h3>
+        <p>{{ total_employees }}</p>
+    </div>
+
+    <div class="card">
+        <h3>⚠️  High Risk Users</h3>
+        <p>
+        {% set high_risk = 0 %}
+        {% for e in employees %}
+            {% if e[11] >= 3 %}
+                {% set high_risk = high_risk + 1 %}
+            {% endif %}
+        {% endfor %}
+        {{ high_risk_users }}
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>🔒 Locked Accounts</h3>
+        <p>
+        {% set locked = 0 %}
+        {% for e in employees %}
+            {% if e[6] != 'Active' %}
+                {% set locked = locked + 1 %}
+            {% endif %}
+        {% endfor %}
+        {{ locked_accounts }}
+        </p>
+    </div>
+    <div class="card">
+	    <h3>🚨 Suspicious Accounts</h3>
+	    <p>{{ suspicious_accounts }}</p>
+    </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-box">
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search employees...">
+</div>
+
+<!-- TABLE -->
+<table id="empTable">
+
+<tr>
+    <th>ID</th>
+    <th>Employee ID</th>
+    <th>Username</th>
+    <th>Full Name</th>
+    <th>Department</th>
+    <th>Role</th>
+    <th>Status</th>
+    <th>MFA</th>
+    <th>Failed Attempts</th>
+    <th>Risk Score</th>
+    <th>Actions</th>
+</tr>
+
+{% for employee in employees %}
+<tr>
+    <td>{{ employee[0] }}</td>
+    <td>{{ employee[1] }}</td>
+    <td>{{ employee[2] }}</td>
+    <td>{{ employee[3] }}</td>
+    <td>{{ employee[4] }}</td>
+    <td>{{ employee[5] }}</td>
+
+    <!-- STATUS -->
+    <td>
+        {% if employee[6] == 'Active' %}
+            <span class="badge active">Active</span>
+        {% else %}
+            <span class="badge locked">{{ employee[6] }}</span>
+        {% endif %}
+    </td>
+
+    <!-- MFA -->
+    <td>
+        {% if employee[7] == 'Yes' %}
+            <span class="badge mfa">Enabled</span>
+        {% else %}
+            <span class="badge no-mfa">Disabled</span>
+        {% endif %}
+    </td>
+
+    <td>{{ employee[11] }}</td>
+
+    <!-- RISK SCORE (LOGIC) -->
+    <td>
+        {% if employee[11] >= 5 or employee[8] == 'No' %}
+            <span class="risk-high">HIGH</span>
+        {% elif employee[11] >= 3 %}
+            <span class="risk-medium">MEDIUM</span>
+        {% else %}
+            <span class="risk-low">LOW</span>
+        {% endif %}
+    </td>
+
+    <!-- ACTIONS -->
+    <td>
+        <button class="btn view">View</button>
+
+        {% if employee[6] == 'Active' %}
+            <button class="btn lock">Lock</button>
+        {% else %}
+            <button class="btn unlock">Unlock</button>
+        {% endif %}
+
+        <button class="btn flag">Flag</button>
+
+	<button class="btn reset">Reset Password</button>
+    </td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

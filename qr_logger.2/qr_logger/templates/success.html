@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WiFi Connected</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0077ff, #00bfff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+h1 {
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.info {
+    text-align: left;
+    margin-top: 15px;
+    font-size: 15px;
+    color: #333;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.status {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    background: #e6fff0;
+    color: #1a7f37;
+}
+
+.footer {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>✅ Connected to WiFi</h1>
+
+    <div class="info">
+        <p><span class="label">Welcome:</span> {{ username }}</p>
+        <p><span class="label">WiFi ID:</span> {{ wifi_id }}</p>
+        <p><span class="label">Timestamp:</span> {{ timestamp }}</p>
+    </div>
+
+    <div class="status">
+        Connection Status: CONNECTED
+    </div>
+
+    <div class="footer">
+        SkyBridge Airport WiFi System © 2026
+    </div>
+
+</div>
+
+</body>
+</html>

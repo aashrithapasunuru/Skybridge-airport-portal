@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyBridge Airport - Employee Access</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background: linear-gradient(
+        rgba(15,23,42,0.9),
+        rgba(15,23,42,0.9)
+    ),
+    url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05");
+    
+    background-size:cover;
+    background-position:center;
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-container{
+
+    width:420px;
+
+    background:rgba(30,41,59,0.95);
+
+    border:1px solid #334155;
+
+    border-radius:15px;
+
+    padding:40px;
+
+    box-shadow:0 0 30px rgba(0,0,0,0.5);
+
+    color:white;
+
+    text-align:center;
+}
+
+.logo{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+h1{
+    font-size:28px;
+    margin-bottom:10px;
+    color: white;
+}
+
+.subtitle{
+    color: #cbd5e1;
+    margin-bottom:30px;
+}
+
+input{
+
+    width:100%;
+    padding:12px;
+
+    margin-bottom:15px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#0f172a;
+
+    color:white;
+
+    border:1px solid #334155;
+}
+
+input:focus{
+    outline:none;
+    border-color:#38bdf8;
+}
+
+button{
+
+    width:100%;
+
+    padding:12px;
+
+    background:#0ea5e9;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:bold;
+}
+
+button:hover{
+    background:#0284c7;
+}
+
+.footer{
+    margin-top:20px;
+    color:#94a3b8;
+    font-size:12px;
+}
+
+.security-banner{
+
+    background:#1e293b;
+
+    border:1px solid #475569;
+
+    color:#fbbf24;
+
+    padding:10px;
+
+    border-radius:8px;
+
+    margin-bottom:20px;
+
+    font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="logo">✈️</div>
+
+    <h1>SkyBridge Airport</h1>
+
+    <p class="subtitle">
+        Corporate Employee Access Portal
+    </p>
+
+    <div class="security-banner">
+        Authorized Personnel Only
+    </div>
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Employee Username"
+            required>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required>
+
+        <button type="submit">
+            Sign In
+        </button>
+
+    </form>
+
+    <div class="footer">
+        SkyBridge Airport IT Security Division<br>
+        Security Operations Center (SOC)
+    </div>
+
+</div>
+
+</body>
+</html>
