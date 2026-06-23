@@ -314,6 +314,34 @@ def change_password():
         return redirect(url_for("employee_dashboard"))
 
     return render_template("change_password.html")
+
+
+
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    
+    conn = sqlite3.connect("wifi_logs.db")
+    cursor = conn.cursor()
+
+    #Total employees
+    cursor.execute("SELECT COUNT(*) FROM employees")
+    total_employees = cursor.fetchone()[0]
+
+    #Total accounts locked
+    cursor.execute("""SELECT COUNT(*) FROM employees WHERE account_status = 'Locked'""")
+    locked_accounts = cursor.fetchone()[0]
+
+    #Password change required
+    cursor.execute("""SELECT COUNT(*) FROM employees WHERE must_change_password = 'Yes'""")
+    password_change_required = cursor.fetchone()[0]
+
+    conn.close()
+
+    return render_template("admin_dashboard.html",
+                           total_employees=total_employees,
+                           locked_accounts=locked_accounts,
+                           password_change_required=password_change_required
+                           )
        
 
 
