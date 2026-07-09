@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Email</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.header{
+    background:#1e293b;
+    padding:20px;
+}
+
+.container{
+    padding:30px;
+}
+
+.email-box{
+    background:#1e293b;
+    padding:25px;
+    border-radius:10px;
+}
+
+.back{
+    display:inline-block;
+    margin-bottom:20px;
+    color:white;
+    background:#0ea5e9;
+    padding:10px 18px;
+    border-radius:8px;
+    text-decoration:none;
+}
+
+.body{
+    margin-top:20px;
+    white-space:pre-wrap;
+    line-height:1.8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>{{ email["subject"] }}</h2>
+
+</div>
+
+<div class="container">
+
+<a href="/employee/inbox" class="back">
+
+⬅ Inbox
+
+</a>
+
+<div class="email-box">
+
+<p><strong>From:</strong> {{ email["sender"] }}</p>
+
+<p><strong>Received:</strong> {{ email["received_at"] }}</p>
+
+<hr>
+
+<div class="body">
+
+{{ email["body"] }}
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

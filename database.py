@@ -28,6 +28,20 @@ def init_db():
     )
     """)
 
+    c.execute("""
+
+    CREATE TABLE IF NOT EXISTS emails (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id TEXT NOT NULL,
+    sender TEXT NOT NULL,
+    subject TEXT NOT NULL,
+    body TEXT NOT NULL,
+    received_at TEXT NOT NULL,
+    is_read INTEGER DEFAULT 0
+    )
+    """)
+
     conn.commit()
     conn.close()
 

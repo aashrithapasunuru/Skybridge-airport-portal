@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Details</title>
+</head>
+<body>
+
+<h2>Employee Details</h2>
+
+<p><strong>Employee ID:</strong> {{ employee[1] }}</p>
+<p><strong>Username:</strong> {{ employee[2] }}</p>
+<p><strong>Full Name:</strong> {{ employee[3] }}</p>
+<p><strong>Department:</strong> {{ employee[4] }}</p>
+<p><strong>Role:</strong> {{ employee[5] }}</p>
+<p><strong>Status:</strong> {{ employee[6] }}</p>
+<p><strong>MFA:</strong> {{ employee[7] }}</p>
+
+<br>
+
+<a href="{{ url_for('employees') }}">⬅ Back to Employees</a>
+
+</body>
+</html>

@@ -9,6 +9,9 @@ import re
 import os
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
+import secrets
+import string
+
 
 from database import init_db
 
@@ -124,6 +127,8 @@ def success():
             timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
 
+
+
 @app.route("/employee/login", methods=["GET", "POST"])
 def employee_login():
 
@@ -137,22 +142,38 @@ def employee_login():
         employee = conn.execute(
             "SELECT * FROM employees WHERE username = ?",
             (username,)
-            ).fetchone()
+        ).fetchone()
 
         conn.close()
 
-        if employee and check_password_hash(
-                employee["password"], password):
+        # User not found
+        if employee is None:
+            return "Invalid username or password"
 
-             session["employee"] = employee["username"]
+        # Account locked
+        if employee["account_status"] == "Locked":
+            return "Your account has been locked. Please contact the administrator."
+                
+            
+            return redirect(url_for("employee_login"))
 
-             if employee["must_change_password"] == "Yes":
-                 return redirect(url_for("change_password"))
+        # Wrong password
+        if not check_password_hash(employee["password"], password):
+            return "Invalid username or password"
 
-             return redirect(url_for("employee_dashboard"))
+        # Successful login
+        session["employee"] = employee["username"]
+        session["role"] = employee["role"]
 
-        return "Invalid username or password"    
+        if employee["must_change_password"] == "Yes":
+            return redirect(url_for("change_password"))
 
+        if employee["role"] == "Super Admin":
+            return redirect(url_for("admin_dashboard"))
+
+        return redirect(url_for("employee_dashboard"))
+
+    # GET request
     return render_template("employee_login.html")
 
 
@@ -203,6 +224,208 @@ def employees():
              )
 
 
+@app.route("/admin/employee/<int:employee_id>")
+def view_employee(employee_id):
+
+    conn = get_db_connection()
+
+    employee = conn.execute(
+            "SELECT * FROM employees WHERE id = ?",
+            (employee_id,)
+            ).fetchone()
+
+    conn.close()
+
+    if employee is None:
+        return "Employee not found", 404
+
+    return render_template(
+            "view_employee.html",
+            employee=employee
+
+            )
+
+@app.route("/admin/employee/<int:employee_id>/lock")
+def lock_employee(employee_id):
+
+    conn = get_db_connection()
+
+    employee = conn.execute(
+            "SELECT * FROM employees WHERE id = ?",
+            (employee_id,)
+            ).fetchone()
+
+    if employee is None:
+        conn.close()
+        return "Employee not found", 404
+
+    conn.execute("""
+        UPDATE employees
+        SET account_status = 'Locked'
+        WHERE id = ?
+        """, (employee_id,))
+
+    conn.execute("""
+       INSERT INTO security_logs
+       (
+         timestamp,
+         employee_id,
+         username,
+         event_type,
+         ip_address,
+         location_status,
+         connection_status,
+         severity,
+         notes
+         )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+         """, (
+             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+             employee["employee_id"],
+             employee["username"],
+             "Account Locked",
+             request.remote_addr,
+             "Internal",
+             "Success",
+             "High",
+             "Locked by administrator"
+
+             ))
+
+    
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("employees"))
+
+@app.route("/admin/employee/<int:employee_id>/unlock")
+def unlock_employee(employee_id):
+
+    conn = get_db_connection()
+
+    employee = conn.execute(
+            "SELECT * FROM employees WHERE id = ?",
+            (employee_id,)
+            ).fetchone()
+
+    if employee is None:
+     conn.close()
+     return "Employee not found", 404
+
+    conn.execute("""
+      UPDATE employees
+      SET account_status = 'Active'
+      WHERE id = ?
+      """, (employee_id,))
+
+    conn.execute("""
+       INSERT INTO security_logs (
+           timestamp,
+           employee_id,
+           username,
+           event_type,
+           ip_address,
+           location_status,
+           connection_status,
+           severity,
+           notes
+           )
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+           """, (
+               datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+               employee["employee_id"],
+               employee["username"],
+               "Account Unlocked",
+               request.remote_addr,
+               "Internal",
+               "Success",
+               "Medium",
+               "Unlocked by administrator"
+               ))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("employees"))
+
+
+@app.route("/admin/employee/<int:employee_id>/reset_password")
+def reset_employee_password(employee_id):
+
+    conn = get_db_connection()
+
+
+    employee = conn.execute(
+            "SELECT * FROM employees WHERE id = ?",
+            (employee_id,)
+            ).fetchone()
+
+    if employee is None:
+
+        conn.close()
+        return "Employee not found", 404
+
+
+    alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
+
+    temporary_password = "".join(
+       secrets.choice(alphabet) for _ in range(12)
+       )
+
+    hashed_password = generate_password_hash(temporary_password)
+
+    conn.execute("""
+      UPDATE employees
+      SET password = ?,
+         must_change_password = 'Yes',
+         password_last_changed = ?
+      WHERE id = ?
+      """, (
+          hashed_password,
+          datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+          employee_id
+          ))
+
+    conn.execute("""
+          INSERT INTO security_logs (
+              timestamp,
+              employee_id,
+              username,
+              event_type,
+              ip_address,
+              location_status,
+              connection_status,
+              severity,
+              notes
+
+              )
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+              """, (
+                  datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                  employee["employee_id"],
+                  employee["username"],
+                  "Password Reset",
+                  request.remote_addr,
+                  "Internal",
+                  "Success",
+                  "Medium",
+                  "Administrator reset employee password"
+                  ))
+
+    conn.commit()
+    conn.close()
+
+    flash(
+            f"Temporary password for {employee['username']}: {temporary_password}",
+            "success"
+
+            )
+    return redirect(url_for("employees"))
+
+
+
 @app.route("/admin/security_logs")
 def security_logs():
 
@@ -232,12 +455,23 @@ def employee_dashboard():
             "SELECT * FROM employees WHERE username = ?",
             (session["employee"],)
             ).fetchone()
+    
+    emails = conn.execute("""
+       SELECT *
+       FROM emails
+       WHERE employee_id = ?
+       ORDER BY received_at DESC
+       """, (
+           employee["employee_id"],
+           )).fetchall()
+
 
     conn.close()
 
 
     return render_template("employee_dashboard.html", 
-                           employee=employee
+                           employee=employee,
+                           emails=emails
                            )
 
 @app.route("/logout")
@@ -342,8 +576,140 @@ def admin_dashboard():
                            locked_accounts=locked_accounts,
                            password_change_required=password_change_required
                            )
-       
 
+
+@app.route("/employee/inbox")
+def employee_inbox():
+
+    if "employee" not in session:
+        return redirect(url_for("employee_login"))
+
+    conn = get_db_connection()
+
+    employee = conn.execute(
+        "SELECT * FROM employees WHERE username = ?",
+        (session["employee"],)
+    ).fetchone()
+
+    emails = conn.execute("""
+        SELECT *
+        FROM emails
+        WHERE employee_id = ?
+        ORDER BY received_at DESC
+    """, (
+        employee["employee_id"],
+    )).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "employee_inbox.html",
+        employee=employee,
+        emails=emails
+    )
+
+
+@app.route("/employee/email/<int:email_id>")
+def view_email(email_id):
+
+    if "employee" not in session:
+        return redirect(url_for("employee_login"))
+
+    conn = get_db_connection()
+
+    email = conn.execute(
+        "SELECT * FROM emails WHERE id = ?",
+        (email_id,)
+    ).fetchone()
+
+    conn.execute(
+        "UPDATE emails SET is_read = 1 WHERE id = ?",
+        (email_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return render_template(
+        "view_email.html",
+        email=email
+    ) 
+
+
+       
+@app.route("/admin/send_email", methods=["GET", "POST"])
+def send_email():
+
+    conn = get_db_connection()
+
+    employees = conn.execute("""
+        SELECT employee_id, username
+        FROM employees
+        ORDER BY username
+    """).fetchall()
+
+    if request.method == "POST":
+
+        employee_id = request.form["employee_id"]
+        subject = request.form["subject"]
+        body = request.form["body"]
+
+        if employee_id == "ALL":
+
+            all_users = conn.execute("""
+              SELECT employee_id
+              FROM employees
+              """).fetchall()
+            
+            for user in all_users:
+                conn.execute("""
+                INSERT INTO emails (
+                employee_id,
+                sender,
+                subject,
+                body,
+                received_at,
+                is_read
+                )
+                VALUES (?, ?, ?, ?, datetime('now'), 0)
+              """, (
+                user["employee_id"],
+                "Airport SOC",
+                subject,
+                body
+                ))
+        else:
+
+             conn.execute("""
+                INSERT INTO emails (
+                employee_id,
+                sender,
+                subject,
+                body,
+                received_at,
+                is_read
+                )
+                VALUES (?, ?, ?, ?, datetime('now'), 0)
+                """, (
+                    employee_id,
+                    "Airport SOC",
+                    subject,
+                    body
+                    ))
+
+
+        conn.commit()
+
+        flash("Email sent successfully!", "success")
+
+        return redirect(url_for("send_email"))
+
+    conn.close()
+
+    return render_template(
+        "send_email.html",
+        employees=employees
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

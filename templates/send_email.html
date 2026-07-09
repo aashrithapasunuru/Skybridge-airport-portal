@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Corporate Mail Center</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.header{
+    background:#1e293b;
+    padding:20px;
+    border-bottom:1px solid #334155;
+}
+
+.container{
+    padding:30px;
+}
+
+form{
+    background:#1e293b;
+    padding:25px;
+    border-radius:10px;
+    max-width:800px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+select,input,textarea{
+
+    width:100%;
+    padding:12px;
+    background:#0b1220;
+    color:white;
+    border:1px solid #334155;
+    border-radius:6px;
+}
+
+textarea{
+
+    height:220px;
+    resize:vertical;
+}
+
+button{
+
+    margin-top:25px;
+    padding:12px 25px;
+    background:#0ea5e9;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+
+    background:#0284c7;
+}
+
+.navbar{
+    background:#111827;
+    padding:12px 20px;
+}
+
+.navbar a{
+
+    color:white;
+    text-decoration:none;
+    margin-right:20px;
+    font-weight:bold;
+}
+
+.navbar a:hover{
+
+    color:#38bdf8;
+}
+
+.flash{
+    padding:12px;
+    margin-bottom:20px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.flash.success{
+    background:#14532d;
+    color:#22c55e;
+}
+
+.flash.error{
+    background:#450a0a;
+    color:#ef4444;
+}	
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<a href="/admin/logs">📶 Guest Logs</a>
+<a href="/admin/employees">👥 Employees</a>
+<a href="/admin/security_logs">🚨 Security Logs</a>
+<a href="/admin/send_email">📧 Corporate Mail Center</a>
+
+</div>
+
+<div class="header">
+
+<h2>📧 Corporate Mail Center</h2>
+
+</div>
+
+<div class="container">
+	{% with messages = get_flashed_messages(with_categories=true) %}
+	{% if messages %}
+	{% for category, message in messages %}
+	<div class="flash {{ category }}">
+		{{ message }}
+	</div>
+	{% endfor %}
+	{% endif %}
+	{% endwith %}
+
+<form method="POST">
+
+<label>Recipient</label>
+
+<select name="employee_id">
+
+<option value="ALL">
+🌍 All Employees
+</option>
+
+{% for employee in employees %}
+
+<option value="{{ employee['employee_id'] }}">
+{{ employee['username'] }}
+</option>
+
+{% endfor %}
+
+</select>
+
+<label>Subject</label>
+
+<input
+type="text"
+name="subject"
+required>
+
+<label>Message</label>
+
+<textarea
+name="body"
+required></textarea>
+
+<button type="submit">
+
+Send Email
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

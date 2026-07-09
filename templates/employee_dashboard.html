@@ -149,7 +149,7 @@ body{
         <p>{{ employee["mfa_enabled"] }}</p>
     </div>
 
-    <div class="info=box">
+    <div class="info-box">
 	    <h4>Last Login:</h4>
 	    <p>{{ employee["last_login"] }}</p>
     </div>	    
@@ -167,6 +167,13 @@ body{
                 Open
             </a>
         </div>
+
+	<div class="card">
+		<h3>📧 Inbox</h3>
+		<a href="{{ url_for('employee_inbox') }}" class="btn">
+			Open Inbox
+		</a>
+	</div>
 
         <div class="card">
             <h3>🛡 MFA Settings</h3>

@@ -146,6 +146,17 @@ tr:hover {
 .active {
 	color: #60a5fa !important;
 }
+
+.btn {
+	display: inline-block;
+	text-decoration: none;
+}
+
+.reset {  
+	background:#8b5cf6;
+	color:white;
+}
+	    
 </style>
 
 <script>
@@ -169,6 +180,21 @@ function searchTable() {
     <a href="/admin/employees" class="active">👥 Employees</a>
     <a href="/admin/security_logs">🚨 Security Logs</a>
 </div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div style="
+                background:#14532d;
+                color:white;
+                padding:10px;
+                margin-bottom:15px;
+                border-radius:6px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
 <div class="header">
 🛡 SOC Admin Dashboard - Panel 2
@@ -278,17 +304,26 @@ function searchTable() {
 
     <!-- ACTIONS -->
     <td>
-        <button class="btn view">View</button>
+	    <a href="{{ url_for('view_employee', employee_id=employee[0]) }}">
+		    View
+	    </a>
 
         {% if employee[6] == 'Active' %}
-            <button class="btn lock">Lock</button>
+	    <a href="{{ url_for('lock_employee', employee_id=employee[0]) }}"
+	   class="btn lock" onclick="return confirm('Lock this account?')">Lock</a>
+
         {% else %}
-            <button class="btn unlock">Unlock</button>
+	    <a href="{{ url_for('unlock_employee', employee_id=employee[0]) }}"
+	   class="btn unlock">Unlock</a>
+
         {% endif %}
 
         <button class="btn flag">Flag</button>
 
-	<button class="btn reset">Reset Password</button>
+	<a href="{{ url_for('reset_employee_password', employee_id=employee[0]) }}"
+	   class="btn reset">
+		Reset Password
+	</a>
     </td>
 
 </tr>
